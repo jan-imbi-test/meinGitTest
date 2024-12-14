@@ -1,0 +1,17 @@
+---
+title: "Resampling Methods and Model Evaluation"
+author: "Jan Meis"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 1: linear regression
+
+
+
+
+
