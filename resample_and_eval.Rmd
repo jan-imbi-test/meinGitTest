@@ -11,7 +11,71 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Exercise 1: linear regression
 
+```{r}
+library(evidence)
+data(fev)
+modl <- lm(FEV ~ Age, data = fev)
+summary(modl)
+```
 
+```{r}
+predict(modl, data = fev)
+sqrt(mean((fev$FEV - predict(modl, data = fev))^2))
+```
+
+```{r}
+AIC(modl)
+BIC(modl)
+summodl <- summary(modl)
+```
+
+
+## example 2: logistic regressin
+
+```{r}
+library(caret)
+data(segmentationData)
+library(dplyr)
+data <- segmentationData |>
+  select(Class, ShapeP2ACh1, ConvexHullPerimRatioCh1)
+
+modl <- glm(Class ~ ., data = data, family=binomial())
+summary(modl)
+
+```
+
+
+```{r}
+truth <- data$Class
+preds <- factor(predict(modl, data = data, type = "response") > 0.5, levels= c(FALSE, TRUE), labels = c("PS", "WS"))
+
+sensitivity(preds, truth,  "WS")
+
+specificity(preds, truth, "PS")
+```
+```{r}
+library(pROC)
+auc(truth, preds)
+
+preds <- predict(modl, data = data, type = "response")
+
+roc.plot <- roc(truth, preds)
+```
+
+## Example 3: resampling
+
+```{r}
+library(evidence)
+library(tidyverse)
+data(fev)
+set.seed(12345)
+train <- sample(654, 327) # half of the data is used for training
+lm.fit <- lm(FEV ~ Age + Hgt + Sex + Smoke,
+data = fev,
+subset = train)
+# the other half of the data is used for evaluation
+mean((fev$FEV-predict(lm.fit, fev))[-train]^2)
+```
 
 
 
